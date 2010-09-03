@@ -5,17 +5,37 @@ module RSA
     extend ::Math
 
     ##
-    # Returns the Euler totient for the positive integer `n`.
+    # Performs modular exponentiation in a memory-efficient manner.
     #
-    # This is presently a naive implementation for explanatory purposes.
-    # Don't rely on it for anything but very small values of `n`.
+    # This is equivalent to `base**exponent % modulus` but much faster for
+    # large exponents.
+    #
+    # This is presently a semi-naive implementation. Don't rely on it for
+    # very large exponents.
     #
     # @example
-    #   RSA::Math.phi(1)  #=> 1
-    #   RSA::Math.phi(2)  #=> 1
-    #   RSA::Math.phi(3)  #=> 2
-    #   RSA::Math.phi(4)  #=> 2
-    #   RSA::Math.phi(5)  #=> 4
+    #   RSA::Math.modpow(5, 3, 13)           #=> 8
+    #   RSA::Math.modpow(4, 13, 497)         #=> 445
+    #
+    # @param  [Integer] base
+    # @param  [Integer] exponent
+    # @param  [Integer] modulus
+    # @return [Integer]
+    # @see    http://en.wikipedia.org/wiki/Modular_exponentiation
+    def self.modpow(base, exponent, modulus)
+      1.upto(exponent).inject(1) do |c, e|
+        (c * base) % modulus
+      end
+    end
+
+    ##
+    # Returns the Euler totient for the positive integer `n`.
+    #
+    # This is presently a very naive implementation. Don't rely on it for
+    # anything but very small values of `n`.
+    #
+    # @example
+    #   (1..5).map { |n| RSA::Math.phi(n) }  #=> [1, 1, 2, 2, 4]
     #
     # @param  [Integer] n
     # @return [Integer]
