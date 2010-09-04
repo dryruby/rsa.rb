@@ -5,6 +5,25 @@ module RSA
     extend ::Math
 
     ##
+    # Performs a primality test on the integer `n`, returning `true` if it
+    # is a prime.
+    #
+    # @example
+    #   1.upto(10).select { |n| RSA::Math.prime?(n) }  #=> [2, 3, 5, 7]
+    #
+    # @param  [Integer] n
+    # @return [Boolean]
+    # @see    http://en.wikipedia.org/wiki/Primality_test
+    # @see    http://ruby-doc.org/core-1.9/classes/Prime.html
+    def self.prime?(n)
+      if n.respond_to?(:prime?)
+        n.prime?
+      else
+        Prime.prime?(n) # Ruby 1.9+ only
+      end
+    end
+
+    ##
     # Performs modular exponentiation in a memory-efficient manner.
     #
     # This is equivalent to `base**exponent % modulus` but much faster for
@@ -14,8 +33,8 @@ module RSA
     # very large exponents.
     #
     # @example
-    #   RSA::Math.modpow(5, 3, 13)           #=> 8
-    #   RSA::Math.modpow(4, 13, 497)         #=> 445
+    #   RSA::Math.modpow(5, 3, 13)                     #=> 8
+    #   RSA::Math.modpow(4, 13, 497)                   #=> 445
     #
     # @param  [Integer] base
     # @param  [Integer] exponent
@@ -35,7 +54,7 @@ module RSA
     # anything but very small values of `n`.
     #
     # @example
-    #   (1..5).map { |n| RSA::Math.phi(n) }  #=> [1, 1, 2, 2, 4]
+    #   (1..5).map { |n| RSA::Math.phi(n) }            #=> [1, 1, 2, 2, 4]
     #
     # @param  [Integer] n
     # @return [Integer]

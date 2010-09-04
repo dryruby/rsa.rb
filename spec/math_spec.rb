@@ -1,6 +1,22 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe RSA::Math do
+  context "RSA::Math.prime?(n) for n = 1..100" do
+    primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+
+    it "returns true for primes" do
+      primes.each do |n|
+        n.should be_prime
+      end
+    end
+
+    it "returns false for composites" do
+      1.upto(100) do |n|
+        n.should_not be_prime unless primes.include?(n)
+      end
+    end
+  end
+
   context "RSA::Math.modpow(5, 3, 13)" do
     it "returns 8" do
       RSA::Math.modpow(5, 3, 13).should == 8
