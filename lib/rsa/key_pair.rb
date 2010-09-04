@@ -32,6 +32,24 @@ module RSA
     end
 
     ##
+    # Returns `true` if this key pair contains a private key.
+    #
+    # @return [Boolean]
+    def private_key?
+      !!private_key
+    end
+    alias_method :private?, :private_key? # for OpenSSL compatibility
+
+    ##
+    # Returns `true` if this key pair contains a public key.
+    #
+    # @return [Boolean]
+    def public_key?
+      !!public_key
+    end
+    alias_method :public?, :public_key?   # for OpenSSL compatibility
+
+    ##
     # Returns `true` if this is a valid RSA key pair according to
     # {RSA::PKCS1 PKCS #1}.
     #

@@ -17,6 +17,12 @@ describe RSA::KeyPair do
     end
   end
 
+  context "#private_key?" do
+    it "returns true" do
+      @key_pair.should be_private_key
+    end
+  end
+
   context "#public_key" do
     it "returns a key" do
       @key_pair.public_key.should be_a(RSA::Key)
@@ -24,6 +30,12 @@ describe RSA::KeyPair do
 
     it "returns the public key" do
       @key_pair.public_key.should equal(@public_key)
+    end
+  end
+
+  context "#public_key?" do
+    it "returns true" do
+      @key_pair.should be_public_key
     end
   end
 
