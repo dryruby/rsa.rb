@@ -7,6 +7,12 @@ describe RSA::OpenSSL do
     @key_pair    = RSA::KeyPair.new(@private_key, @public_key)
   end
 
+  context "RSA::KeyPair.generate" do
+    it "should return a new key pair" do
+      RSA::KeyPair.generate(512).should be_an(RSA::KeyPair)
+    end
+  end
+
   context "RSA::KeyPair#to_openssl" do
     it "should return an OpenSSL::PKey::RSA instance" do
       @key_pair.to_openssl.should be_a(OpenSSL::PKey::RSA)
