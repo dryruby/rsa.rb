@@ -7,7 +7,7 @@ module RSA
   # @see http://www.rsa.com/rsalabs/node.asp?id=2125
   module PKCS1
     ##
-    # Converts a nonnegative integer to an octet string of a specified
+    # Converts a nonnegative integer into an octet string of a specified
     # length.
     #
     # This is the {RSA::PKCS1 PKCS #1} I2OSP (Integer-to-Octet-String)
@@ -15,9 +15,14 @@ module RSA
     #
     # Refer to PKCS #1 v2.1, section 4.1, p. 8.
     #
-    # @param  [Integer] x
-    # @param  [Integer] len
-    # @return [String]
+    # @example
+    #   RSA::PKCS1.i2osp(9_202_000, 2)    #=> ArgumentError: integer too large
+    #   RSA::PKCS1.i2osp(9_202_000, 3)    #=> "\x8C\x69\x50"
+    #   RSA::PKCS1.i2osp(9_202_000, 4)    #=> "\x00\x8C\x69\x50"
+    #
+    # @param  [Integer] x   nonnegative integer to be converted
+    # @param  [Integer] len intended length of the resulting octet string
+    # @return [String] octet string of length `len`
     # @see    http://tools.ietf.org/html/rfc3447#section-4.1
     # @raise  [ArgumentError] if `n` is greater than 256^len
     def self.i2osp(x, len)
@@ -31,15 +36,18 @@ module RSA
     end
 
     ##
-    # Converts an octet string to a nonnegative integer.
+    # Converts an octet string into a nonnegative integer.
     #
     # This is the {RSA::PKCS1 PKCS #1} OS2IP (Octet-String-to-Integer)
     # primitive.
     #
     # Refer to PKCS #1 v2.1, section 4.2, p. 9.
     #
-    # @param  [String] x
-    # @return [Integer]
+    # @example
+    #   RSA::PKCS1.os2ip("\x8C\x69\x50")  #=> 9_202_000
+    #
+    # @param  [String] x octet string to be converted
+    # @return [Integer] nonnegative integer
     # @see    http://tools.ietf.org/html/rfc3447#section-4.2
     def self.os2ip(x)
       x.bytes.inject(0) { |n, b| (n << 8) + b }
