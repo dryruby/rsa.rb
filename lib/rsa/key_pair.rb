@@ -77,5 +77,24 @@ module RSA
       ciphertext = PKCS1.rsaep(public_key, plaintext)
       PKCS1.i2osp(ciphertext, Math.log(ciphertext, 256).ceil)
     end
+
+    ##
+    # Decrypts the given `ciphertext` using the private key from this key
+    # pair.
+    #
+    # @param  [String, Integer]         ciphertext
+    # @param  [Hash{Symbol => Object}]  options
+    # @option options [Symbol, #to_sym] :padding (nil)
+    # @return [String]
+    def decrypt(ciphertext, options = {})
+      ciphertext = case ciphertext
+        when Integer      then ciphertext
+        when String       then PKCS1.os2ip(ciphertext)
+        when IO, StringIO then PKCS1.os2ip(ciphertext.read)
+        else raise ArgumentError, ciphertext.inspect
+      end
+      plaintext = PKCS1.rsadp(private_key, ciphertext)
+      PKCS1.i2osp(plaintext, Math.log(plaintext, 256).ceil)
+    end
   end # class KeyPair
 end # module RSA
