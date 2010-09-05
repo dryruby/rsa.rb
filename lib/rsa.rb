@@ -1,5 +1,13 @@
 require 'stringio' unless defined?(StringIO)
-require 'prime' unless defined?(Prime) # 1.9+ only
+
+if RUBY_VERSION < '1.9.1'
+  # @see http://rubygems.org/gems/backports
+  begin
+    require 'backports/1.9.1'
+  rescue LoadError
+    abort "RSA.rb requires Ruby 1.9.1 or the Backports gem (hint: `gem install backports')."
+  end
+end
 
 module RSA
   autoload :Math,    'rsa/math'

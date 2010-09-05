@@ -6,13 +6,13 @@ describe RSA::Math do
 
     it "returns true for primes" do
       primes.each do |n|
-        n.should be_prime
+        RSA::Math.prime?(n).should == true
       end
     end
 
     it "returns false for composites" do
       1.upto(100) do |n|
-        n.should_not be_prime unless primes.include?(n)
+        RSA::Math.prime?(n).should == false unless primes.include?(n)
       end
     end
   end

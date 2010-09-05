@@ -23,7 +23,8 @@ module RSA
       if n.respond_to?(:prime?)
         n.prime?
       else
-        Prime.prime?(n) # Ruby 1.9+ only
+        require 'prime' unless defined?(Prime) # Ruby 1.9+ only
+        Prime.prime?(n)
       end
     end
 
