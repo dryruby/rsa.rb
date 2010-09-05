@@ -11,13 +11,15 @@ module RSA
     # The RSA private key.
     #
     # @return [Key]
-    attr_reader :private_key
+    attr_reader  :private_key
+    alias_method :private, :private_key
 
     ##
     # The RSA public key.
     #
     # @return [Key]
-    attr_reader :public_key
+    attr_reader  :public_key
+    alias_method :public, :public_key
 
     ##
     # Initializes a new key pair.
