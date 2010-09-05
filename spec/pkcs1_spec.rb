@@ -31,4 +31,26 @@ describe RSA::PKCS1 do
       RSA::PKCS1.os2ip("\x00").should == 0
     end
   end
+
+  context "RSA::PKCS1.rsaep" do
+    it "raises an error if m is out of range" do
+      lambda { RSA::PKCS1.rsaep([0, 0], 1) }.should raise_error(ArgumentError)
+    end
+
+    # @see http://en.wikipedia.org/wiki/RSA#A_worked_example
+    it "encrypts the Wikipedia example correctly" do
+      RSA::PKCS1.rsaep([n = 3233, e = 17], m = ?A.ord).should == 2790
+    end
+  end
+
+  context "RSA::PKCS1.rsadp" do
+    it "raises an error if c is out of range" do
+      lambda { RSA::PKCS1.rsadp([0, 0], 1) }.should raise_error(ArgumentError)
+    end
+
+    # @see http://en.wikipedia.org/wiki/RSA#A_worked_example
+    it "decrypts the Wikipedia example correctly" do
+      RSA::PKCS1.rsadp([n = 3233, d = 2753], c = 2790).should == ?A.ord
+    end
+  end
 end
