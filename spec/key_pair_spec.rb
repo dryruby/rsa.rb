@@ -43,6 +43,12 @@ describe RSA::KeyPair do
     # TODO
   end
 
+  context "#modulus" do
+    it "returns an integer" do
+      @key_pair.modulus.should be_an(Integer)
+    end
+  end
+
   context "#encrypt" do
     it "accepts an integer argument" do
       lambda { @key_pair.encrypt(42) }.should_not raise_error(ArgumentError)

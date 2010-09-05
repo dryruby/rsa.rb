@@ -62,6 +62,15 @@ module RSA
     end
 
     ##
+    # Returns the RSA modulus for this key pair.
+    #
+    # @return [Integer]
+    def modulus
+      private_key ? private_key.modulus : public_key.modulus
+    end
+    alias_method :n, :modulus
+
+    ##
     # Encrypts the given `plaintext` using the public key from this key
     # pair.
     #
