@@ -11,13 +11,16 @@ module RSA
     # The RSA modulus, a positive integer.
     #
     # @return [Integer]
-    attr_reader :modulus
+    attr_reader  :modulus
+    alias_method :n, :modulus
 
     ##
     # The RSA public or private exponent, a positive integer.
     #
     # @return [Integer]
-    attr_reader :exponent
+    attr_reader  :exponent
+    alias_method :e, :exponent
+    alias_method :d, :exponent
 
     ##
     # Initializes a new key.
