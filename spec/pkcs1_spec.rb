@@ -53,4 +53,20 @@ describe RSA::PKCS1 do
       RSA::PKCS1.rsadp([n = 3233, d = 2753], c = 2790).should == ?A.ord
     end
   end
+
+  context "RSA::PKCS1.rsasp1" do
+    it "raises an error if m is out of range" do
+      lambda { RSA::PKCS1.rsasp1([0, 0], 1) }.should raise_error(ArgumentError)
+    end
+
+    # TODO
+  end
+
+  context "RSA::PKCS1.rsavp1" do
+    it "raises an error if s is out of range" do
+      lambda { RSA::PKCS1.rsavp1([0, 0], 1) }.should raise_error(ArgumentError)
+    end
+
+    # TODO
+  end
 end

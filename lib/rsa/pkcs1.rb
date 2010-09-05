@@ -84,5 +84,41 @@ module RSA
       raise ArgumentError, "ciphertext representative out of range" unless c >= 0 && c < n
       m = Math.modpow(c, d, n)
     end
+
+    ##
+    # Produces a signature representative from a message representative
+    # under the control of a private key.
+    #
+    # This is the PKCS #1 RSASP1 signature primitive.
+    # Refer to PKCS #1 v2.1 pp. 12-13, section 5.2.1.
+    #
+    # @param  [Key, #to_a] k RSA private key (`n`, `d`)
+    # @param  [Integer] m message representative, an integer between 0 and `n` - 1
+    # @return [Integer] signature representative, an integer between 0 and `n` - 1
+    # @raise  [ArgumentError] if `m` is out of range
+    # @see    http://tools.ietf.org/html/rfc3447#section-5.2.1
+    def self.rsasp1(k, m)
+      n, d = k.to_a
+      raise ArgumentError, "message representative out of range" unless m >= 0 && m < n
+      s = Math.modpow(m, d, n)
+    end
+
+    ##
+    # Recovers the message representative from a signature representative
+    # under the control of a public key.
+    #
+    # This is the PKCS #1 RSAVP1 verification primitive.
+    # Refer to PKCS #1 v2.1 p. 13, section 5.2.2.
+    #
+    # @param  [Key, #to_a] k RSA public key (`n`, `e`)
+    # @param  [Integer] s signature representative, an integer between 0 and `n` - 1
+    # @return [Integer] message representative, an integer between 0 and `n` - 1
+    # @raise  [ArgumentError] if `s` is out of range
+    # @see    http://tools.ietf.org/html/rfc3447#section-5.2.2
+    def self.rsavp1(k, s)
+      n, e = k.to_a
+      raise ArgumentError, "signature representative out of range" unless s >= 0 && s < n
+      m = Math.modpow(s, e, n)
+    end
   end # module PKCS1
 end # module RSA
