@@ -78,4 +78,22 @@ describe RSA::KeyPair do
       @key_pair.decrypt(2557).should be_a(String)
     end
   end
+
+  context "#sign" do
+    it "accepts an integer argument" do
+      lambda { @key_pair.sign(42) }.should_not raise_error(ArgumentError)
+    end
+
+    it "accepts a string argument" do
+      lambda { @key_pair.sign(42.chr) }.should_not raise_error(ArgumentError)
+    end
+
+    it "accepts an IO argument" do
+      lambda { @key_pair.sign(StringIO.open { |buffer| buffer << 42.chr }) }.should_not raise_error(ArgumentError)
+    end
+
+    it "returns a string" do
+      @key_pair.sign(42).should be_a(String)
+    end
+  end
 end

@@ -96,5 +96,23 @@ module RSA
       plaintext = PKCS1.rsadp(private_key, ciphertext)
       PKCS1.i2osp(plaintext, Math.log(plaintext, 256).ceil)
     end
+
+    ##
+    # Signs the given `plaintext` using the private key from this key pair.
+    #
+    # @param  [String, Integer]         plaintext
+    # @param  [Hash{Symbol => Object}]  options
+    # @option options [Symbol, #to_sym] :padding (nil)
+    # @return [String]
+    def sign(plaintext, options = {})
+      plaintext = case plaintext
+        when Integer      then plaintext
+        when String       then PKCS1.os2ip(plaintext)
+        when IO, StringIO then PKCS1.os2ip(plaintext.read)
+        else raise ArgumentError, plaintext.inspect
+      end
+      signature = PKCS1.rsasp1(private_key, plaintext)
+      PKCS1.i2osp(signature, Math.log(signature, 256).ceil)
+    end
   end # class KeyPair
 end # module RSA
