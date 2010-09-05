@@ -42,7 +42,7 @@ module RSA
     # @return [Integer]
     # @see    http://tools.ietf.org/html/rfc3447#section-4.2
     def self.os2ip(x)
-      # TODO
+      x.bytes.inject(0) { |n, b| (n << 8) + b }
     end
   end # module PKCS1
 end # module RSA
