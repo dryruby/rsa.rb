@@ -42,4 +42,22 @@ describe RSA::KeyPair do
   context "#valid?" do
     # TODO
   end
+
+  context "#encrypt" do
+    it "accepts an integer argument" do
+      lambda { @key_pair.encrypt(42) }.should_not raise_error(ArgumentError)
+    end
+
+    it "accepts a string argument" do
+      lambda { @key_pair.encrypt(42.chr) }.should_not raise_error(ArgumentError)
+    end
+
+    it "accepts an IO argument" do
+      lambda { @key_pair.encrypt(StringIO.open { |buffer| buffer << 42.chr }) }.should_not raise_error(ArgumentError)
+    end
+
+    it "returns a string" do
+      @key_pair.encrypt(42).should be_a(String)
+    end
+  end
 end

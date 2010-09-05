@@ -4,6 +4,10 @@ module RSA
   module Math
     extend ::Math
 
+    class << self
+      public :log
+    end
+
     ##
     # Performs a primality test on the integer `n`, returning `true` if it
     # is a prime.

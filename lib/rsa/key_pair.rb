@@ -58,5 +58,24 @@ module RSA
     def valid?
       private_key.valid? && public_key.valid?
     end
+
+    ##
+    # Encrypts the given `plaintext` using the public key from this key
+    # pair.
+    #
+    # @param  [String, Integer]         plaintext
+    # @param  [Hash{Symbol => Object}]  options
+    # @option options [Symbol, #to_sym] :padding (nil)
+    # @return [String]
+    def encrypt(plaintext, options = {})
+      plaintext = case plaintext
+        when Integer      then plaintext
+        when String       then PKCS1.os2ip(plaintext)
+        when IO, StringIO then PKCS1.os2ip(plaintext.read)
+        else raise ArgumentError, plaintext.inspect
+      end
+      ciphertext = PKCS1.rsaep(public_key, plaintext)
+      PKCS1.i2osp(ciphertext, Math.log(ciphertext, 256).ceil)
+    end
   end # class KeyPair
 end # module RSA
