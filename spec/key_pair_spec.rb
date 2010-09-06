@@ -43,6 +43,18 @@ describe RSA::KeyPair do
     # TODO
   end
 
+  context "#bytesize" do
+    it "returns an integer" do
+      @key_pair.bytesize.should be_an(Integer)
+    end
+  end
+
+  context "#bitsize" do
+    it "returns an integer" do
+      @key_pair.bitsize.should be_an(Integer)
+    end
+  end
+
   context "#modulus" do
     it "returns an integer" do
       @key_pair.modulus.should be_an(Integer)

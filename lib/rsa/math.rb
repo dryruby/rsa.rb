@@ -5,7 +5,7 @@ module RSA
     extend ::Math
 
     class << self
-      public :log
+      public :log, :log2
     end
 
     ##

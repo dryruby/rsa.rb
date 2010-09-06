@@ -62,6 +62,23 @@ module RSA
     end
 
     ##
+    # Returns the byte size of this key pair.
+    #
+    # @return [Integer]
+    def bytesize
+      ::Math.log(modulus, 256).ceil
+    end
+
+    ##
+    # Returns the bit size of this key pair.
+    #
+    # @return [Integer]
+    def bitsize
+      ::Math.log2(modulus).ceil
+    end
+    alias_method :size, :bitsize
+
+    ##
     # Returns the RSA modulus for this key pair.
     #
     # @return [Integer]
