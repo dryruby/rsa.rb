@@ -9,7 +9,7 @@ GEMSPEC = Gem::Specification.new do |gem|
   gem.homepage           = 'http://rsa.rubyforge.org/'
   gem.license            = 'Public Domain' if gem.respond_to?(:license=)
   gem.summary            = 'RSA encryption for Ruby.'
-  gem.description        = 'RSA.rb is a Ruby library for RSA encryption.'
+  gem.description        = 'RSA.rb is a pure-Ruby library that implements the RSA encryption algorithm and the PKCS#1 cryptography standard.'
   gem.rubyforge_project  = 'rsa'
 
   gem.author             = 'Arto Bendiken'
