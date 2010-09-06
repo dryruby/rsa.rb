@@ -88,6 +88,17 @@ module RSA
     alias_method :n, :modulus
 
     ##
+    # Returns a hash table representation of this key pair.
+    #
+    # @example
+    #   key_pair.to_hash  #=> {:n => ..., :d => ..., :e => ...}
+    #
+    # @return [Hash]
+    def to_hash
+      {:n => modulus, :d => private_key ? private_key.exponent : nil, :e => public_key ? public_key.exponent : nil}
+    end
+
+    ##
     # Encrypts the given `plaintext` using the public key from this key
     # pair.
     #

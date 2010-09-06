@@ -61,6 +61,20 @@ describe RSA::KeyPair do
     end
   end
 
+  context "#to_hash" do
+    it "returns a hash" do
+      @key_pair.to_hash.should be_a(Hash)
+    end
+
+    it "returns a hash with the correct keys" do
+      [:n, :d, :e].each { |key| @key_pair.to_hash.should have_key(key) }
+    end
+
+    it "returns a hash with the correct values" do
+      @key_pair.to_hash.should == {:n => @n, :d => @d, :e => @e}
+    end
+  end
+
   context "#encrypt(Integer)" do
     it "accepts an integer argument" do
       lambda { @key_pair.encrypt(42) }.should_not raise_error(ArgumentError)
