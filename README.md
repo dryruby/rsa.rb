@@ -17,10 +17,31 @@ Features
 * Compatible with Ruby 1.9.1+ and JRuby 1.5.0+.
 * Compatible with older Ruby versions with the help of the [Backports][] gem.
 
+Examples
+--------
+
+    require 'rsa'
+
+### Generating a new RSA key pair
+
+    key_pair = RSA::KeyPair.generate(128)
+
+### Encrypting a plaintext message
+
+    ciphertext = key_pair.encrypt("Hello, world!")
+
+### Decrypting a ciphertext message
+
+    plaintext = key_pair.decrypt(ciphertext)
+
 Documentation
 -------------
 
-* <http://rsa.rubyforge.org/>
+<http://rsa.rubyforge.org/>
+
+* {RSA::KeyPair}
+* {RSA::Key}
+* {RSA::PKCS1}
 
 Dependencies
 ------------
