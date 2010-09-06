@@ -122,9 +122,25 @@ module RSA
       PKCS1.rsasp1(private_key, convert_to_integer(plaintext))
     end
 
+    ##
+    # Verifies the given `signature` using the public key from this key
+    # pair.
+    #
+    # @param  [Integer, String, IO]     signature
+    # @param  [Integer, String, IO]     plaintext
+    # @param  [Hash{Symbol => Object}]  options
+    # @option options [Symbol, #to_sym] :padding (nil)
+    # @return [Boolean]
+    def verify(signature, plaintext, options = {})
+      PKCS1.rsavp1(public_key, convert_to_integer(signature)).eql?(convert_to_integer(plaintext))
+    end
+
   protected
 
     ##
+    # Converts the given `input` to an integer suitable for use with RSA
+    # primitives.
+    #
     # @param  [Integer, String, IO] input
     # @return [Integer]
     def convert_to_integer(input)

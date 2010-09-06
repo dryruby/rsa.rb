@@ -114,4 +114,22 @@ describe RSA::KeyPair do
       @key_pair.sign(42).should be_an(Integer)
     end
   end
+
+  context "#verify" do
+    it "accepts integer arguments" do
+      lambda { @key_pair.verify(3065, 42) }.should_not raise_error(ArgumentError)
+    end
+
+    it "accepts string arguments" do
+      lambda { @key_pair.verify(RSA::PKCS1.i2osp(3065), 42.chr) }.should_not raise_error(ArgumentError)
+    end
+
+    it "accepts IO arguments" do
+      lambda { @key_pair.verify(StringIO.open { |buffer| buffer << RSA::PKCS1.i2osp(3065) }, StringIO.open { |buffer| buffer << 42.chr }) }.should_not raise_error(ArgumentError)
+    end
+
+    it "returns a boolean" do
+      @key_pair.verify(3065, 42).should be_true
+    end
+  end
 end
