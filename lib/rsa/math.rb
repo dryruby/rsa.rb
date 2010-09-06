@@ -30,8 +30,8 @@ module RSA
     # This is equivalent to `base**exponent % modulus` but much faster for
     # large exponents.
     #
-    # This is presently a semi-naive implementation. Don't rely on it for
-    # very large exponents.
+    # The running time of the used algorithm, the right-to-left binary
+    # method, is O(log _exponent_).
     #
     # @example
     #   RSA::Math.modpow(5, 3, 13)                     #=> 8
@@ -43,9 +43,13 @@ module RSA
     # @return [Integer]
     # @see    http://en.wikipedia.org/wiki/Modular_exponentiation
     def self.modpow(base, exponent, modulus)
-      1.upto(exponent).inject(1) do |c, e|
-        (c * base) % modulus
+      result = 1
+      while exponent > 0
+        result   = (base * result) % modulus unless (exponent & 1).zero?
+        base     = (base * base)   % modulus
+        exponent >>= 1
       end
+      result
     end
 
     ##

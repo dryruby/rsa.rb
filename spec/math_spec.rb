@@ -17,6 +17,18 @@ describe RSA::Math do
     end
   end
 
+  context "RSA::Math.modpow(1, 1, 0)" do
+    it "raises a zero-division error" do
+      lambda { RSA::Math.modpow(1, 1, 0) }.should raise_error(ZeroDivisionError)
+    end
+  end
+
+  context "RSA::Math.modpow(5, 0, 10)" do
+    it "returns 1" do
+      RSA::Math.modpow(5, 0, 10).should == 1
+    end
+  end
+
   context "RSA::Math.modpow(5, 3, 13)" do
     it "returns 8" do
       RSA::Math.modpow(5, 3, 13).should == 8
@@ -26,6 +38,18 @@ describe RSA::Math do
   context "RSA::Math.modpow(4, 13, 497)" do
     it "returns 445" do
       RSA::Math.modpow(4, 13, 497).should == 445
+    end
+  end
+
+  context "RSA::Math.modpow(b, e, m) for b = 0..10, e = 1..10, m = 1..10" do
+    it "returns the correct result" do
+      (0..10).each do |b|
+        (1..10).each do |e|
+          (1..10).each do |m|
+            {[b, e, m] => RSA::Math.modpow(b, e, m)}.should == {[b, e, m] => (b ** e) % m}
+          end
+        end
+      end
     end
   end
 
