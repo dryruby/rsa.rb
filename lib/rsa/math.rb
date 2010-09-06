@@ -4,10 +4,6 @@ module RSA
   module Math
     extend ::Math
 
-    class << self
-      public :log, :log2
-    end
-
     ##
     # Performs a primality test on the integer `n`, returning `true` if it
     # is a prime.
@@ -67,6 +63,38 @@ module RSA
     # @see    http://mathworld.wolfram.com/TotientFunction.html
     def self.phi(n)
       1 + (2...n).count { |i| i.gcd(n).eql?(1) }
+    end
+
+    ##
+    # Returns the binary logarithm of `n`.
+    #
+    # @param  [Integer] n
+    # @return [Float]
+    # @see    http://en.wikipedia.org/wiki/Binary_logarithm
+    def self.log2(n)
+      ::Math.log2(n)
+    end
+
+    ##
+    # Returns the base-256 logarithm of `n`.
+    #
+    # @param  [Integer] n
+    # @return [Float]
+    # @see    http://en.wikipedia.org/wiki/Logarithm
+    def self.log256(n)
+      ::Math.log(n, 256)
+    end
+
+    ##
+    # Returns the natural logarithm of `n`. If the optional argument `b` is
+    # given, it will be used as the base of the logarithm.
+    #
+    # @param  [Integer] n
+    # @param  [Integer] b
+    # @return [Float]
+    # @see    http://en.wikipedia.org/wiki/Natural_logarithm
+    def self.log(n, b = nil)
+      b ? ::Math.log(n, b) : ::Math.log(n)
     end
   end
 end

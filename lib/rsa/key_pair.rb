@@ -66,7 +66,7 @@ module RSA
     #
     # @return [Integer]
     def bytesize
-      ::Math.log(modulus, 256).ceil
+      Math.log256(modulus).ceil
     end
 
     ##
@@ -74,7 +74,7 @@ module RSA
     #
     # @return [Integer]
     def bitsize
-      ::Math.log2(modulus).ceil
+      Math.log2(modulus).ceil
     end
     alias_method :size, :bitsize
 
@@ -103,7 +103,7 @@ module RSA
         else raise ArgumentError, plaintext.inspect
       end
       ciphertext = PKCS1.rsaep(public_key, plaintext)
-      PKCS1.i2osp(ciphertext, ::Math.log(ciphertext, 256).ceil)
+      PKCS1.i2osp(ciphertext, Math.log256(ciphertext).ceil)
     end
 
     ##
@@ -122,7 +122,7 @@ module RSA
         else raise ArgumentError, ciphertext.inspect
       end
       plaintext = PKCS1.rsadp(private_key, ciphertext)
-      PKCS1.i2osp(plaintext, ::Math.log(plaintext, 256).ceil)
+      PKCS1.i2osp(plaintext, Math.log256(plaintext).ceil)
     end
 
     ##
@@ -140,7 +140,7 @@ module RSA
         else raise ArgumentError, plaintext.inspect
       end
       signature = PKCS1.rsasp1(private_key, plaintext)
-      PKCS1.i2osp(signature, ::Math.log(signature, 256).ceil)
+      PKCS1.i2osp(signature, Math.log256(signature).ceil)
     end
   end # class KeyPair
 end # module RSA
