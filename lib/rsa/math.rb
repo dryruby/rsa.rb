@@ -25,6 +25,22 @@ module RSA
     end
 
     ##
+    # Returns `true` if the integer `a` is coprime (relatively prime) to
+    # integer `b`.
+    #
+    # @example
+    #   RSA::Math.coprime?(6, 35)                      #=> true
+    #   RSA::Math.coprime?(6, 27)                      #=> false
+    #
+    # @param  [Integer] a
+    # @param  [Integer] b
+    # @return [Boolean]
+    # @see    http://en.wikipedia.org/wiki/Coprime
+    def self.coprime?(a, b)
+      a.gcd(b).equal?(1)
+    end
+
+    ##
     # Performs modular exponentiation in a memory-efficient manner.
     #
     # This is equivalent to `base**exponent % modulus` but much faster for
@@ -66,7 +82,7 @@ module RSA
     # @see    http://en.wikipedia.org/wiki/Euler's_totient_function
     # @see    http://mathworld.wolfram.com/TotientFunction.html
     def self.phi(n)
-      1 + (2...n).count { |i| i.gcd(n).eql?(1) }
+      1 + (2...n).count { |i| coprime?(n, i) }
     end
 
     ##

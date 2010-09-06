@@ -17,6 +17,16 @@ describe RSA::Math do
     end
   end
 
+  context "RSA::Math.coprime?" do
+    it "returns true if a and b are coprime" do
+      RSA::Math.coprime?(6, 35).should == true
+    end
+
+    it "returns false if a and b are not coprime" do
+      RSA::Math.coprime?(6, 27).should == false
+    end
+  end
+
   context "RSA::Math.modpow(1, 1, 0)" do
     it "raises a zero-division error" do
       lambda { RSA::Math.modpow(1, 1, 0) }.should raise_error(ZeroDivisionError)
