@@ -103,7 +103,7 @@ module RSA
         else raise ArgumentError, plaintext.inspect
       end
       ciphertext = PKCS1.rsaep(public_key, plaintext)
-      PKCS1.i2osp(ciphertext, Math.log256(ciphertext).ceil)
+      PKCS1.i2osp(ciphertext)
     end
 
     ##
@@ -122,7 +122,7 @@ module RSA
         else raise ArgumentError, ciphertext.inspect
       end
       plaintext = PKCS1.rsadp(private_key, ciphertext)
-      PKCS1.i2osp(plaintext, Math.log256(plaintext).ceil)
+      PKCS1.i2osp(plaintext)
     end
 
     ##
@@ -140,7 +140,7 @@ module RSA
         else raise ArgumentError, plaintext.inspect
       end
       signature = PKCS1.rsasp1(private_key, plaintext)
-      PKCS1.i2osp(signature, Math.log256(signature).ceil)
+      PKCS1.i2osp(signature)
     end
   end # class KeyPair
 end # module RSA
