@@ -74,8 +74,8 @@ describe RSA::KeyPair do
       lambda { @key_pair.encrypt(StringIO.open { |buffer| buffer << 42.chr }) }.should_not raise_error(ArgumentError)
     end
 
-    it "returns a string" do
-      @key_pair.encrypt(42).should be_a(String)
+    it "returns an integer" do
+      @key_pair.encrypt(42).should be_an(Integer)
     end
   end
 
@@ -92,8 +92,8 @@ describe RSA::KeyPair do
       lambda { @key_pair.decrypt(StringIO.open { |buffer| buffer << 42.chr }) }.should_not raise_error(ArgumentError)
     end
 
-    it "returns a string" do
-      @key_pair.decrypt(2557).should be_a(String)
+    it "returns an integer" do
+      @key_pair.decrypt(2557).should be_an(Integer)
     end
   end
 
@@ -110,8 +110,8 @@ describe RSA::KeyPair do
       lambda { @key_pair.sign(StringIO.open { |buffer| buffer << 42.chr }) }.should_not raise_error(ArgumentError)
     end
 
-    it "returns a string" do
-      @key_pair.sign(42).should be_a(String)
+    it "returns an integer" do
+      @key_pair.sign(42).should be_an(Integer)
     end
   end
 end

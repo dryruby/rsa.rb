@@ -91,56 +91,49 @@ module RSA
     # Encrypts the given `plaintext` using the public key from this key
     # pair.
     #
-    # @param  [String, Integer]         plaintext
+    # @param  [Integer, String, IO]     plaintext
     # @param  [Hash{Symbol => Object}]  options
     # @option options [Symbol, #to_sym] :padding (nil)
-    # @return [String]
+    # @return [Integer]
     def encrypt(plaintext, options = {})
-      plaintext = case plaintext
-        when Integer      then plaintext
-        when String       then PKCS1.os2ip(plaintext)
-        when IO, StringIO then PKCS1.os2ip(plaintext.read)
-        else raise ArgumentError, plaintext.inspect
-      end
-      ciphertext = PKCS1.rsaep(public_key, plaintext)
-      PKCS1.i2osp(ciphertext)
+      PKCS1.rsaep(public_key, convert_to_integer(plaintext))
     end
 
     ##
     # Decrypts the given `ciphertext` using the private key from this key
     # pair.
     #
-    # @param  [String, Integer]         ciphertext
+    # @param  [Integer, String, IO]     ciphertext
     # @param  [Hash{Symbol => Object}]  options
     # @option options [Symbol, #to_sym] :padding (nil)
-    # @return [String]
+    # @return [Integer]
     def decrypt(ciphertext, options = {})
-      ciphertext = case ciphertext
-        when Integer      then ciphertext
-        when String       then PKCS1.os2ip(ciphertext)
-        when IO, StringIO then PKCS1.os2ip(ciphertext.read)
-        else raise ArgumentError, ciphertext.inspect
-      end
-      plaintext = PKCS1.rsadp(private_key, ciphertext)
-      PKCS1.i2osp(plaintext)
+      PKCS1.rsadp(private_key, convert_to_integer(ciphertext))
     end
 
     ##
     # Signs the given `plaintext` using the private key from this key pair.
     #
-    # @param  [String, Integer]         plaintext
+    # @param  [Integer, String, IO]     plaintext
     # @param  [Hash{Symbol => Object}]  options
     # @option options [Symbol, #to_sym] :padding (nil)
-    # @return [String]
+    # @return [Integer]
     def sign(plaintext, options = {})
-      plaintext = case plaintext
-        when Integer      then plaintext
-        when String       then PKCS1.os2ip(plaintext)
-        when IO, StringIO then PKCS1.os2ip(plaintext.read)
-        else raise ArgumentError, plaintext.inspect
+      PKCS1.rsasp1(private_key, convert_to_integer(plaintext))
+    end
+
+  protected
+
+    ##
+    # @param  [Integer, String, IO] input
+    # @return [Integer]
+    def convert_to_integer(input)
+      case input
+        when Integer      then input
+        when String       then PKCS1.os2ip(input)
+        when IO, StringIO then PKCS1.os2ip(input.read)
+        else raise ArgumentError, input.inspect # FIXME
       end
-      signature = PKCS1.rsasp1(private_key, plaintext)
-      PKCS1.i2osp(signature)
     end
   end # class KeyPair
 end # module RSA
