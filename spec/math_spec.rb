@@ -27,6 +27,18 @@ describe RSA::Math do
     end
   end
 
+  context "RSA::Math.gcd(0, 0)" do
+    it "returns zero" do
+      RSA::Math.gcd(0, 0).should == 0
+    end
+  end
+
+  context "RSA::Math.gcd(a, 0)" do
+    it "returns a" do
+      RSA::Math.gcd(3, 0).should == 3
+    end
+  end
+
   context "RSA::Math.gcd(a, b)" do
     it "returns an integer" do
       RSA::Math.gcd(3, 5).should be_an(Integer)
@@ -55,6 +67,26 @@ describe RSA::Math do
     end
   end
 
+  context "RSA::Math.egcd(0, 0)" do
+    it "raises a zero-division error" do
+      lambda { RSA::Math.egcd(0, 0) }.should raise_error(ZeroDivisionError)
+    end
+  end
+
+  context "RSA::Math.egcd(a, b)" do
+    it "returns a two-element array" do
+      RSA::Math.egcd(120, 23).should be_an(Array)
+      RSA::Math.egcd(120, 23).should have(2).elements
+    end
+
+    it "returns EGCD(a, b)" do
+      RSA::Math.egcd(120, 23).should    == [-9, 47]
+      RSA::Math.egcd(421, 111).should   == [-29, 110]
+      RSA::Math.egcd(93, 219).should    == [33, -14]
+      RSA::Math.egcd(4864, 3458).should == [32, -45]
+    end
+  end
+
   context "RSA::Math.modinv(a, m)" do
     it "raises an arithmetic error if m <= 0" do
       lambda { RSA::Math.modinv(6, -1) }.should raise_error(RSA::Math::ArithmeticError)
@@ -73,6 +105,7 @@ describe RSA::Math do
       RSA::Math.modinv(3, 11).should    == 4
       RSA::Math.modinv(6, 35).should    == 6
       RSA::Math.modinv(271, 383).should == 106 # HAC, p. 610
+      RSA::Math.modinv(111, 421).should == 110
     end
   end
 

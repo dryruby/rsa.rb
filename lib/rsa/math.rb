@@ -14,7 +14,7 @@ module RSA
     #   1.upto(10).select { |n| RSA::Math.prime?(n) }  #=> [2, 3, 5, 7]
     #
     # @param  [Integer] n
-    # @return [Boolean]
+    # @return [Boolean] `true` if `n` is a prime number, `false` otherwise
     # @see    http://en.wikipedia.org/wiki/Primality_test
     # @see    http://ruby-doc.org/core-1.9/classes/Prime.html
     def self.prime?(n)
@@ -36,7 +36,7 @@ module RSA
     #
     # @param  [Integer] a an integer
     # @param  [Integer] b an integer
-    # @return [Boolean]
+    # @return [Boolean] `true` if `a` and `b` are coprime, `false` otherwise
     # @see    http://en.wikipedia.org/wiki/Coprime
     # @see    http://mathworld.wolfram.com/RelativelyPrime.html
     def self.coprime?(a, b)
@@ -56,11 +56,37 @@ module RSA
     #
     # @param  [Integer] a an integer
     # @param  [Integer] b an integer
-    # @return [Integer]
+    # @return [Integer] the greatest common divisor of `a` and `b`
     # @see    http://en.wikipedia.org/wiki/Greatest_common_divisor
     # @see    http://mathworld.wolfram.com/GreatestCommonDivisor.html
     def self.gcd(a, b)
       a.gcd(b)
+    end
+
+    ##
+    # Returns the Bezout coefficients of the two nonzero integers `a` and
+    # `b` using the extended Euclidean algorithm.
+    #
+    # @example
+    #   RSA::Math.egcd(120, 23)                        #=> [-9, 47]
+    #   RSA::Math.egcd(421, 111)                       #=> [-29, 110]
+    #   RSA::Math.egcd(93, 219)                        #=> [33, -14]
+    #   RSA::Math.egcd(4864, 3458)                     #=> [32, -45]
+    #
+    # @param  [Integer] a a nonzero integer
+    # @param  [Integer] b a nonzero integer
+    # @return [Array(Integer, Integer)] the Bezout coefficients `x` and `y`
+    # @raise  [ZeroDivisionError] if `a` or `b` is zero
+    # @see    http://en.wikipedia.org/wiki/B%C3%A9zout's_identity
+    # @see    http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
+    # @see    http://mathworld.wolfram.com/ExtendedGreatestCommonDivisor.html
+    def self.egcd(a, b)
+      if a.modulo(b).zero?
+        [0, 1]
+      else
+        x, y = egcd(b, a.modulo(b))
+        [y, x - y * a.div(b)]
+      end
     end
 
     ##
@@ -78,7 +104,7 @@ module RSA
     #
     # @param  [Integer] b
     # @param  [Integer] m the modulus
-    # @return [Integer]
+    # @return [Integer] the modular multiplicative inverse
     # @raise  [ArithmeticError] if `m` <= 0, or if `b` not coprime to `m`
     # @see    http://en.wikipedia.org/wiki/Modular_multiplicative_inverse
     # @see    http://mathworld.wolfram.com/ModularInverse.html
