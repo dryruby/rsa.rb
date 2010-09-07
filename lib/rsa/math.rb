@@ -91,10 +91,10 @@ module RSA
 
     ##
     # Returns the modular multiplicative inverse of the integer `b` modulo
-    # `m`.
+    # `m`, where `b <= m`.
     #
-    # This is presently a very naive implementation. Don't rely on it for
-    # anything but very small values of `m`.
+    # The running time of the used algorithm, the extended Euclidean
+    # algorithm, is on the order of O(log2 _m_).
     #
     # @example
     #   RSA::Math.modinv(3, 11)                        #=> 4
@@ -110,7 +110,7 @@ module RSA
     # @see    http://mathworld.wolfram.com/ModularInverse.html
     def self.modinv(b, m)
       if m > 0 && coprime?(b, m)
-        (1...m).find { |x| (b * x).modulo(m).equal?(1) } || 0
+        egcd(b, m).first.modulo(m)
       else
         raise ArithmeticError, "modulus #{m} is not positive" if m <= 0
         raise ArithmeticError, "#{b} is not coprime to #{m}"
@@ -124,7 +124,7 @@ module RSA
     # large exponents.
     #
     # The running time of the used algorithm, the right-to-left binary
-    # method, is O(log _exponent_).
+    # method, is on the order of O(log _exponent_).
     #
     # @example
     #   RSA::Math.modpow(5, 3, 13)                     #=> 8
