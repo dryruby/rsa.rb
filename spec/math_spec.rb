@@ -4,26 +4,62 @@ describe RSA::Math do
   context "RSA::Math.prime?(n) for n = 1..100" do
     primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
 
-    it "returns true for primes" do
-      primes.each do |n|
-        RSA::Math.prime?(n).should == true
-      end
-    end
-
     it "returns false for composites" do
       1.upto(100) do |n|
         RSA::Math.prime?(n).should == false unless primes.include?(n)
       end
     end
+
+    it "returns true for primes" do
+      primes.each do |n|
+        RSA::Math.prime?(n).should == true
+      end
+    end
   end
 
-  context "RSA::Math.coprime?" do
-    it "returns true if a and b are coprime" do
-      RSA::Math.coprime?(6, 35).should == true
+  context "RSA::Math.coprime?(a, b)" do
+    it "returns false if not a \u22A5 b" do
+      RSA::Math.coprime?(6, 27).should == false
     end
 
-    it "returns false if a and b are not coprime" do
-      RSA::Math.coprime?(6, 27).should == false
+    it "returns true if a \u22A5 b" do
+      RSA::Math.coprime?(6, 35).should == true
+    end
+  end
+
+  context "RSA::Math.modinv(a, m)" do
+    it "raises an arithmetic error if m <= 0" do
+      lambda { RSA::Math.modinv(6, -1) }.should raise_error(RSA::Math::ArithmeticError)
+      lambda { RSA::Math.modinv(6, 0) }.should raise_error(RSA::Math::ArithmeticError)
+    end
+
+    it "raises an arithmetic error if not a \u22A5 m" do
+      lambda { RSA::Math.modinv(6, 36) }.should raise_error(RSA::Math::ArithmeticError)
+    end
+
+    it "returns (a\u207B\u00B9 mod m) if a \u22A5 m" do
+      RSA::Math.modinv(1, 5).should  == 1
+      RSA::Math.modinv(2, 5).should  == 3
+      RSA::Math.modinv(3, 5).should  == 2
+      RSA::Math.modinv(4, 5).should  == 4
+      RSA::Math.modinv(3, 11).should == 4
+      RSA::Math.modinv(6, 35).should == 6
+    end
+  end
+
+  if RUBY_PLATFORM =~ /java/ # JRuby only
+    # @see http://download.oracle.com/javase/6/docs/api/java/math/BigInteger.html#modInverse(java.math.BigInteger)
+
+    context "RSA::Math.modinv(a, m) for a = -100..100, m = 1..100 where a \u22A5 m" do
+      it "returns (a\u207B\u00B9 mod m) if a \u22A5 m" do
+        (-100..100).each do |a|
+          (1..100).each do |m|
+            if RSA::Math.coprime?(a, m) # only test valid arguments
+              {[a, m] => RSA::Math.modinv(a, m)}.should == {[a, m] => Java::JavaMath::BigInteger.new(a.to_s).modInverse(m)}
+            end
+          end
+        end
+      end
     end
   end
 

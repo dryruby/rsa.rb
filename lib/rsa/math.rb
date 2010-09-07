@@ -4,6 +4,8 @@ module RSA
   module Math
     extend ::Math
 
+    class ArithmeticError < ArgumentError; end
+
     ##
     # Performs a primality test on the integer `n`, returning `true` if it
     # is a prime.
@@ -38,6 +40,34 @@ module RSA
     # @see    http://en.wikipedia.org/wiki/Coprime
     def self.coprime?(a, b)
       a.gcd(b).equal?(1)
+    end
+
+    ##
+    # Returns the modular multiplicative inverse of the integer `b` modulo
+    # `m`.
+    #
+    # This is presently a very naive implementation. Don't rely on it for
+    # anything but very small values of `m`.
+    #
+    # @example
+    #   RSA::Math.modinv(3, 11)                        #=> 4
+    #   RSA::Math.modinv(6, 35)                        #=> 6
+    #   RSA::Math.modinv(-6, 35)                       #=> 29
+    #   RSA::Math.modinv(6, 36)                        #=> ArithmeticError
+    #
+    # @param  [Integer] b
+    # @param  [Integer] m the modulus
+    # @return [Integer]
+    # @raise  [ArithmeticError] if `m` <= 0, or if `b` not coprime to `m`
+    # @see    http://en.wikipedia.org/wiki/Modular_multiplicative_inverse
+    # @see    http://mathworld.wolfram.com/ModularInverse.html
+    def self.modinv(b, m)
+      if m > 0 && coprime?(b, m)
+        (1...m).find { |x| (b * x).modulo(m).equal?(1) } || 0
+      else
+        raise ArithmeticError, "modulus #{m} is not positive" if m <= 0
+        raise ArithmeticError, "#{b} is not coprime to #{m}"
+      end
     end
 
     ##
