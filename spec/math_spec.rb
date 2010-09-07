@@ -27,6 +27,34 @@ describe RSA::Math do
     end
   end
 
+  context "RSA::Math.gcd(a, b)" do
+    it "returns an integer" do
+      RSA::Math.gcd(3, 5).should be_an(Integer)
+    end
+
+    it "returns GCD(a, b)" do
+      RSA::Math.gcd(3, 5).should    == 1
+      RSA::Math.gcd(8, 12).should   == 4
+      RSA::Math.gcd(12, 60).should  == 12
+      RSA::Math.gcd(12, 90).should  == 6
+      RSA::Math.gcd(42, 56).should  == 14
+      RSA::Math.gcd(9, 28).should   == 1
+      RSA::Math.gcd(72, 168).should == 24
+      RSA::Math.gcd(19, 36).should  == 1
+    end
+  end
+
+  context "RSA::Math.gcd(a, b) for a = -100..100, b = -100..100" do
+    it "returns GCD(a, b)" do
+      (-100..100).each do |a|
+        (-100..100).each do |b|
+          RSA::Math.gcd(a, b).should == a.gcd(b)
+          RSA::Math.gcd(b, a).should == b.gcd(a)
+        end
+      end
+    end
+  end
+
   context "RSA::Math.modinv(a, m)" do
     it "raises an arithmetic error if m <= 0" do
       lambda { RSA::Math.modinv(6, -1) }.should raise_error(RSA::Math::ArithmeticError)
@@ -38,12 +66,13 @@ describe RSA::Math do
     end
 
     it "returns (a\u207B\u00B9 mod m) if a \u22A5 m" do
-      RSA::Math.modinv(1, 5).should  == 1
-      RSA::Math.modinv(2, 5).should  == 3
-      RSA::Math.modinv(3, 5).should  == 2
-      RSA::Math.modinv(4, 5).should  == 4
-      RSA::Math.modinv(3, 11).should == 4
-      RSA::Math.modinv(6, 35).should == 6
+      RSA::Math.modinv(1, 5).should    == 1
+      RSA::Math.modinv(2, 5).should     == 3
+      RSA::Math.modinv(3, 5).should     == 2
+      RSA::Math.modinv(4, 5).should     == 4
+      RSA::Math.modinv(3, 11).should    == 4
+      RSA::Math.modinv(6, 35).should    == 6
+      RSA::Math.modinv(271, 383).should == 106 # HAC, p. 610
     end
   end
 

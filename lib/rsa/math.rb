@@ -34,12 +34,33 @@ module RSA
     #   RSA::Math.coprime?(6, 35)                      #=> true
     #   RSA::Math.coprime?(6, 27)                      #=> false
     #
-    # @param  [Integer] a
-    # @param  [Integer] b
+    # @param  [Integer] a an integer
+    # @param  [Integer] b an integer
     # @return [Boolean]
     # @see    http://en.wikipedia.org/wiki/Coprime
+    # @see    http://mathworld.wolfram.com/RelativelyPrime.html
     def self.coprime?(a, b)
-      a.gcd(b).equal?(1)
+      gcd(a, b).equal?(1)
+    end
+
+    ##
+    # Returns the greatest common divisor (GCD) of the two integers `a` and
+    # `b`. The GCD is the largest positive integer that divides both numbers
+    # without a remainder.
+    #
+    # @example
+    #   RSA::Math.gcd(3, 5)                            #=> 1
+    #   RSA::Math.gcd(8, 12)                           #=> 4
+    #   RSA::Math.gcd(12, 60)                          #=> 12
+    #   RSA::Math.gcd(90, 12)                          #=> 6
+    #
+    # @param  [Integer] a an integer
+    # @param  [Integer] b an integer
+    # @return [Integer]
+    # @see    http://en.wikipedia.org/wiki/Greatest_common_divisor
+    # @see    http://mathworld.wolfram.com/GreatestCommonDivisor.html
+    def self.gcd(a, b)
+      a.gcd(b)
     end
 
     ##
