@@ -183,21 +183,11 @@ describe RSA::Math do
     end
   end
 
-  context "RSA::Math.phi(100)" do
-    it "returns 40" do
-      RSA::Math.phi(100).should == 40
-    end
-  end
-
-  context "RSA::Math.phi(1000)" do
-    it "returns 400" do
-      RSA::Math.phi(1000).should == 400
-    end
-  end
-
-  context "RSA::Math.phi(10000)" do
-    it "returns 4000" do
-      RSA::Math.phi(10000).should == 4000
+  context "RSA::Math.phi(10^e) for e = 1..6" do
+    it "returns \u03D5(n)" do
+      (1..6).each do |e|
+        RSA::Math.phi(n = 10**e).should == (n * 0.4).to_i
+      end
     end
   end
 end
