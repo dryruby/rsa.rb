@@ -173,11 +173,31 @@ describe RSA::Math do
     end
   end
 
-  context "RSA::Math.phi(n) for n = 2..10" do
+  context "RSA::Math.phi(n) for n = 1..69" do
     it "returns \u03D5(n)" do
-      [1, 1, 1, 2, 2, 4, 2, 6, 4, 6, 4, 10].each_with_index do |phi, n|
-        RSA::Math.phi(n).should == phi
+      # @see http://oeis.org/classic/A000010
+      phis = [1, 1, 2, 2, 4, 2, 6, 4, 6, 4, 10, 4, 12, 6, 8, 8, 16, 6, 18, 8, 12, 10, 22, 8, 20, 12, 18, 12, 28, 8, 30, 16, 20, 16, 24, 12, 36, 18, 24, 16, 40, 12, 42, 20, 24, 22, 46, 16, 42, 20, 32, 24, 52, 18, 40, 24, 36, 28, 58, 16, 60, 30, 36, 32, 48, 20, 66, 32, 44]
+      phis.each_with_index do |phi, i|
+        RSA::Math.phi(n = i + 1).should == phi
       end
+    end
+  end
+
+  context "RSA::Math.phi(100)" do
+    it "returns 40" do
+      RSA::Math.phi(100).should == 40
+    end
+  end
+
+  context "RSA::Math.phi(1000)" do
+    it "returns 400" do
+      RSA::Math.phi(1000).should == 400
+    end
+  end
+
+  context "RSA::Math.phi(10000)" do
+    it "returns 4000" do
+      RSA::Math.phi(10000).should == 4000
     end
   end
 end

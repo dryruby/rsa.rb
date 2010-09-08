@@ -130,10 +130,10 @@ module RSA
     #   RSA::Math.modpow(5, 3, 13)                     #=> 8
     #   RSA::Math.modpow(4, 13, 497)                   #=> 445
     #
-    # @param  [Integer] base
-    # @param  [Integer] exponent
-    # @param  [Integer] modulus
-    # @return [Integer]
+    # @param  [Integer] base the base
+    # @param  [Integer] exponent the exponent
+    # @param  [Integer] modulus the modulus
+    # @return [Integer] the result
     # @see    http://en.wikipedia.org/wiki/Modular_exponentiation
     def self.modpow(base, exponent, modulus)
       result = 1
@@ -154,19 +154,30 @@ module RSA
     # @example
     #   (1..5).map { |n| RSA::Math.phi(n) }            #=> [1, 1, 2, 2, 4]
     #
-    # @param  [Integer] n
-    # @return [Integer]
+    # @param  [Integer] n a positive integer, or zero
+    # @return [Integer] the Euler totient of `n`
+    # @raise  [ArgumentError] if `n` < 0
     # @see    http://en.wikipedia.org/wiki/Euler's_totient_function
     # @see    http://mathworld.wolfram.com/TotientFunction.html
     def self.phi(n)
-      1 + (2...n).count { |i| coprime?(n, i) }
+      case
+        when n < 0     then raise ArgumentError, "expected a positive integer, but got #{n}"
+        when n < 2     then 1 # by convention
+        when prime?(n) then n - 1
+        else 1 + (2...n).count { |i| coprime?(n, i) }
+      end
     end
 
     ##
     # Returns the binary logarithm of `n`.
     #
-    # @param  [Integer] n
-    # @return [Float]
+    # @example
+    #   RSA::Math.log2(16)                             #=> 4.0
+    #   RSA::Math.log2(1024)                           #=> 10.0
+    #
+    # @param  [Integer] n a positive integer
+    # @return [Float] the logarithm
+    # @raise  [Errno::EDOM] if `n` < 1
     # @see    http://en.wikipedia.org/wiki/Binary_logarithm
     def self.log2(n)
       ::Math.log2(n)
@@ -175,8 +186,13 @@ module RSA
     ##
     # Returns the base-256 logarithm of `n`.
     #
-    # @param  [Integer] n
-    # @return [Float]
+    # @example
+    #   RSA::Math.log256(16)                           #=> 0.5
+    #   RSA::Math.log256(1024)                         #=> 1.25
+    #
+    # @param  [Integer] n a positive integer
+    # @return [Float] the logarithm
+    # @raise  [Errno::EDOM] if `n` < 1
     # @see    http://en.wikipedia.org/wiki/Logarithm
     def self.log256(n)
       ::Math.log(n, 256)
@@ -186,9 +202,14 @@ module RSA
     # Returns the natural logarithm of `n`. If the optional argument `b` is
     # given, it will be used as the base of the logarithm.
     #
-    # @param  [Integer] n
-    # @param  [Integer] b
-    # @return [Float]
+    # @example
+    #   RSA::Math.log(16, 2)                           #=> 4.0
+    #   RSA::Math.log(16, 256)                         #=> 0.5
+    #
+    # @param  [Integer] n a positive integer
+    # @param  [Integer] b a positive integer >= 2, or `nil`
+    # @return [Float] the logarithm
+    # @raise  [Errno::EDOM] if `n` < 1, or if `b` < 2
     # @see    http://en.wikipedia.org/wiki/Natural_logarithm
     def self.log(n, b = nil)
       b ? ::Math.log(n, b) : ::Math.log(n)
