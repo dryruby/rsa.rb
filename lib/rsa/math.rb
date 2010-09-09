@@ -168,9 +168,6 @@ module RSA
     ##
     # Returns the Euler totient for the positive integer `n`.
     #
-    # This is presently a very naive implementation. Don't rely on it for
-    # anything but very small values of `n`.
-    #
     # @example
     #   (1..5).map { |n| RSA::Math.phi(n) }            #=> [1, 1, 2, 2, 4]
     #
@@ -184,7 +181,7 @@ module RSA
         when n < 0     then raise ArgumentError, "expected a positive integer, but got #{n}"
         when n < 2     then 1 # by convention
         when prime?(n) then n - 1
-        else 1 + (2...n).count { |i| coprime?(n, i) }
+        else factorize(n).inject(n) { |product, (p, e)| product * (1 - (1 / p.to_f)) }.to_i # FIXME: use BigDecimal
       end
     end
 

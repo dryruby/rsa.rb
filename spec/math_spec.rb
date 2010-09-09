@@ -187,7 +187,22 @@ describe RSA::Math do
 
   context "RSA::Math.phi(1)" do
     it "returns 1" do
-      RSA::Math.phi(1).should == 1
+      RSA::Math.phi(1).should == 1 # 1 is coprime to itself
+    end
+  end
+
+  context "RSA::Math.phi(2)" do
+    it "returns 1" do
+      RSA::Math.phi(2).should == 1
+    end
+  end
+
+  context "RSA::Math.phi(n) for n > 2" do
+    it "returns an even integer" do
+      # @see http://en.wikipedia.org/wiki/Euler's_totient_function#Properties
+      3.upto(10_000).each do |n|
+        RSA::Math.phi(n).should be_even
+      end
     end
   end
 
@@ -201,10 +216,11 @@ describe RSA::Math do
     end
   end
 
-  context "RSA::Math.phi(10^e) for e = 1..6" do
+  context "RSA::Math.phi(10^e) for e = 1..23" do
     it "returns \u03D5(n)" do
-      (1..6).each do |e|
-        RSA::Math.phi(n = 10**e).should == (n * 0.4).to_i
+      # Floating-point inaccuracies come into play at around n = 10^24.
+      (1..23).each do |e|
+        RSA::Math.phi(n = 10**e).should == ('4' + '0' * (e - 1)).to_i # RSA::Math.phi(n) == 0.4 * n
       end
     end
   end
