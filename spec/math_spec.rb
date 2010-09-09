@@ -1,6 +1,16 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe RSA::Math do
+  context "RSA::Math.primes" do
+    it "returns an enumerator" do
+      RSA::Math.primes.should be_an(Enumerator)
+    end
+
+    it "returns the prime number sequence" do
+      RSA::Math.primes.take(5).should == [2, 3, 5, 7, 11]
+    end
+  end
+
   context "RSA::Math.factorize(n)" do
     it "returns an enumerator" do
       RSA::Math.factorize(12).should be_an(Enumerator)

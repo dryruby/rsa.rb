@@ -1,5 +1,3 @@
-require 'prime' unless defined?(Prime) # Ruby 1.9+ only
-
 module RSA
   ##
   # Mathematical helper functions for RSA.
@@ -8,7 +6,21 @@ module RSA
 
     class ArithmeticError < ArgumentError; end
 
-    PrimeGenerator = Prime::Generator23 # Ruby 1.9+ only
+    ##
+    # Yields the infinite sequence of prime numbers.
+    #
+    # @example
+    #   RSA::Math.primes.take(5)                       #=> [2, 3, 5, 7, 11]
+    #
+    # @yield  [prime] each prime number
+    # @yieldparam [Integer] prime a prime number
+    # @return [Enumerator]
+    # @see    http://ruby-doc.org/core-1.9/classes/Prime.html
+    def self.primes(&block)
+      require 'prime' unless defined?(Prime) # Ruby 1.9+ only
+      primes = Prime::Generator23.new
+      block_given? ? primes.each(&block) : primes.to_enum
+    end
 
     ##
     # Yields the prime factorization of the nonzero integer `n`.
@@ -27,7 +39,7 @@ module RSA
       raise ZeroDivisionError if n.zero?
       if block_given?
         n = n.abs if n < 0
-        PrimeGenerator.new.find do |p|
+        primes.find do |p|
           e = 0
           while (q, r = n.divmod(p); r.zero?)
             n, e = q, e + 1
@@ -55,7 +67,7 @@ module RSA
       case
         when n < 0 then prime?(n.abs)
         when n < 2 then false
-        else PrimeGenerator.new.each do |p|
+        else primes do |p|
           q, r = n.divmod(p)
           return true  if q < p
           return false if r.zero?
