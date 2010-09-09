@@ -165,6 +165,8 @@ module RSA
       result
     end
 
+    ONE = BigDecimal('1')
+
     ##
     # Returns the Euler totient for the positive integer `n`.
     #
@@ -181,7 +183,7 @@ module RSA
         when n < 0     then raise ArgumentError, "expected a positive integer, but got #{n}"
         when n < 2     then 1 # by convention
         when prime?(n) then n - 1
-        else factorize(n).inject(n) { |product, (p, e)| product * (1 - (1 / p.to_f)) }.to_i # FIXME: use BigDecimal
+        else factorize(n).inject(n) { |product, (p, e)| product * (ONE - (ONE / BigDecimal(p.to_s))) }.round.to_i
       end
     end
 
