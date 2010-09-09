@@ -16,18 +16,18 @@ module RSA
     # @example
     #   RSA::Math.factorize(12).to_a                   #=> [[2, 2], [3, 1]]
     #
-    # @param  [Integer]    n      a nonzero integer
-    # @param  [Enumerable] primes a pseudo-prime generator
+    # @param  [Integer] n a nonzero integer
     # @yield  [p, e] each prime factor
     # @yieldparam [Integer] p the prime factor base
     # @yieldparam [Integer] e the prime factor exponent
     # @return [Enumerator]
     # @raise  [ZeroDivisionError] if `n` is zero
-    def self.factorize(n, primes = PrimeGenerator.new, &block)
+    # @see    http://ruby-doc.org/core-1.9/classes/Prime.html
+    def self.factorize(n, &block)
       raise ZeroDivisionError if n.zero?
       if block_given?
         n = n.abs if n < 0
-        primes.find do |p|
+        PrimeGenerator.new.find do |p|
           e = 0
           while (q, r = n.divmod(p); r.zero?)
             n, e = q, e + 1
@@ -52,10 +52,14 @@ module RSA
     # @see    http://en.wikipedia.org/wiki/Primality_test
     # @see    http://ruby-doc.org/core-1.9/classes/Prime.html
     def self.prime?(n)
-      if n.respond_to?(:prime?)
-        n.prime?
-      else
-        Prime.prime?(n) # Ruby 1.9+ only
+      case
+        when n < 0 then prime?(n.abs)
+        when n < 2 then false
+        else PrimeGenerator.new.each do |p|
+          q, r = n.divmod(p)
+          return true  if q < p
+          return false if r.zero?
+        end
       end
     end
 

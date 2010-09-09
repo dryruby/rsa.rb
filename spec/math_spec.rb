@@ -35,11 +35,23 @@ describe RSA::Math do
     end
   end
 
-  context "RSA::Math.prime?(n) for n = 1..100" do
+  context "RSA::Math.prime?(0)" do
+    it "returns false" do
+      RSA::Math.prime?(0).should == false
+    end
+  end
+
+  context "RSA::Math.prime?(1)" do
+    it "returns false" do
+      RSA::Math.prime?(1).should == false
+    end
+  end
+
+  context "RSA::Math.prime?(n) for n = 2..100" do
     primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
 
     it "returns false for composites" do
-      1.upto(100) do |n|
+      2.upto(100) do |n|
         RSA::Math.prime?(n).should == false unless primes.include?(n)
       end
     end
