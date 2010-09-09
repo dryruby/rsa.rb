@@ -6,8 +6,9 @@ describe RSA::Math do
       RSA::Math.primes.should be_an(Enumerator)
     end
 
-    it "returns the prime number sequence" do
-      RSA::Math.primes.take(5).should == [2, 3, 5, 7, 11]
+    it "returns a pseudo-prime number sequence" do
+      RSA::Math.primes.take(5).should    == [2, 3, 5, 7, 11]
+      RSA::Math.primes.take(1000).should == Prime::Generator23.new.take(1000) if RUBY_VERSION > '1.9' # Ruby 1.9+ only
     end
   end
 

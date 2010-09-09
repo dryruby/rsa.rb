@@ -7,19 +7,29 @@ module RSA
     class ArithmeticError < ArgumentError; end
 
     ##
-    # Yields the infinite sequence of prime numbers.
+    # Yields an infinite pseudo-prime number sequence.
+    #
+    # This is a pseudo-prime generator that simply yields the initial values
+    # 2 and 3, followed by all positive integers that are not divisible by 2
+    # or 3.
+    #
+    # It works identically to `Prime::Generator23`, the Ruby 1.9 standard
+    # library's default pseudo-prime generator implementation.
     #
     # @example
     #   RSA::Math.primes.take(5)                       #=> [2, 3, 5, 7, 11]
     #
-    # @yield  [prime] each prime number
-    # @yieldparam [Integer] prime a prime number
-    # @return [Enumerator]
+    # @yield  [p] each pseudo-prime number
+    # @yieldparam [Integer] p a pseudo-prime number
+    # @return [Enumerator] yielding pseudo-primes
     # @see    http://ruby-doc.org/core-1.9/classes/Prime.html
     def self.primes(&block)
-      require 'prime' unless defined?(Prime) # Ruby 1.9+ only
-      primes = Prime::Generator23.new
-      block_given? ? primes.each(&block) : primes.to_enum
+      if block_given?
+        yield 2; yield 3; yield 5
+        prime, step = 5, 4
+        loop { yield prime += (step = 6 - step) }
+      end
+      enum_for(:primes)
     end
 
     ##
