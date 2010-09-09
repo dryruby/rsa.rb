@@ -7,13 +7,33 @@ module RSA
     class ArithmeticError < ArgumentError; end
 
     ##
+    # Yields the prime factorization for the nonzero integer `n`.
+    #
+    # @param  [Integer] n a nonzero integer
+    # @yield  [p] each prime factor
+    # @yieldparam [Integer] p a prime factor
+    # @return [Enumerator]
+    # @raise  [ZeroDivisionError] if `n` is zero
+    def self.factorize(n, &block)
+      raise ZeroDivisionError if n.zero?
+      if block_given?
+        require 'prime' unless defined?(Prime) # Ruby 1.9+ only
+        case block.arity
+          when 1 then Prime.prime_division(n).each { |(p, e)| yield p }
+          else Prime.prime_division(n).each { |(p, e)| yield p, e }
+        end
+      end
+      enum_for(:factorize, n)
+    end
+
+    ##
     # Performs a primality test on the integer `n`, returning `true` if it
     # is a prime.
     #
     # @example
     #   1.upto(10).select { |n| RSA::Math.prime?(n) }  #=> [2, 3, 5, 7]
     #
-    # @param  [Integer] n
+    # @param  [Integer] n an integer
     # @return [Boolean] `true` if `n` is a prime number, `false` otherwise
     # @see    http://en.wikipedia.org/wiki/Primality_test
     # @see    http://ruby-doc.org/core-1.9/classes/Prime.html

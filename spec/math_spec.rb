@@ -1,6 +1,24 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe RSA::Math do
+  context "RSA::Math.factorize(n)" do
+    it "returns an enumerator" do
+      RSA::Math.factorize(12).should be_an(Enumerator)
+    end
+  end
+
+  context "RSA::Math.factorize(0)" do
+    it "raises a zero-division error" do
+      lambda { RSA::Math.factorize(0) }.should raise_error(ZeroDivisionError)
+    end
+  end
+
+  context "RSA::Math.factorize(12)" do
+    it "returns the prime factors of 12" do
+      RSA::Math.factorize(12).to_a.should == [[2, 2], [3, 1]]
+    end
+  end
+
   context "RSA::Math.prime?(n) for n = 1..100" do
     primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
 
