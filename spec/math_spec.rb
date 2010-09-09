@@ -13,9 +13,25 @@ describe RSA::Math do
     end
   end
 
+  context "RSA::Math.factorize(1)" do
+    it "yields no prime factors" do
+      RSA::Math.factorize(1).to_a.should be_empty
+    end
+  end
+
   context "RSA::Math.factorize(12)" do
-    it "returns the prime factors of 12" do
+    it "yields the prime factors 2^2 and 3^1" do
       RSA::Math.factorize(12).to_a.should == [[2, 2], [3, 1]]
+    end
+  end
+
+  if RUBY_VERSION > '1.9' # Ruby 1.9+ only
+    context "RSA::Math.factorize(n) for n = 2..1000" do
+      it "yields the prime factors of n" do
+        2.upto(1_000) do |n|
+          RSA::Math.factorize(n).to_a.should == Prime.prime_division(n)
+        end
+      end
     end
   end
 

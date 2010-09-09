@@ -1,3 +1,5 @@
+require 'prime' unless defined?(Prime) # Ruby 1.9+ only
+
 module RSA
   ##
   # Mathematical helper functions for RSA.
@@ -6,22 +8,34 @@ module RSA
 
     class ArithmeticError < ArgumentError; end
 
+    PrimeGenerator = Prime::Generator23 # Ruby 1.9+ only
+
     ##
-    # Yields the prime factorization for the nonzero integer `n`.
+    # Yields the prime factorization of the nonzero integer `n`.
     #
-    # @param  [Integer] n a nonzero integer
-    # @yield  [p] each prime factor
-    # @yieldparam [Integer] p a prime factor
+    # @example
+    #   RSA::Math.factorize(12).to_a                   #=> [[2, 2], [3, 1]]
+    #
+    # @param  [Integer]    n      a nonzero integer
+    # @param  [Enumerable] primes a pseudo-prime generator
+    # @yield  [p, e] each prime factor
+    # @yieldparam [Integer] p the prime factor base
+    # @yieldparam [Integer] e the prime factor exponent
     # @return [Enumerator]
     # @raise  [ZeroDivisionError] if `n` is zero
-    def self.factorize(n, &block)
+    def self.factorize(n, primes = PrimeGenerator.new, &block)
       raise ZeroDivisionError if n.zero?
       if block_given?
-        require 'prime' unless defined?(Prime) # Ruby 1.9+ only
-        case block.arity
-          when 1 then Prime.prime_division(n).each { |(p, e)| yield p }
-          else Prime.prime_division(n).each { |(p, e)| yield p, e }
+        n = n.abs if n < 0
+        primes.find do |p|
+          e = 0
+          while (q, r = n.divmod(p); r.zero?)
+            n, e = q, e + 1
+          end
+          yield p, e unless e.zero?
+          n <= p
         end
+        yield n, 1 if n > 1
       end
       enum_for(:factorize, n)
     end
@@ -41,8 +55,7 @@ module RSA
       if n.respond_to?(:prime?)
         n.prime?
       else
-        require 'prime' unless defined?(Prime) # Ruby 1.9+ only
-        Prime.prime?(n)
+        Prime.prime?(n) # Ruby 1.9+ only
       end
     end
 
