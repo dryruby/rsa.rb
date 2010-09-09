@@ -1,4 +1,5 @@
-require 'stringio' unless defined?(StringIO)
+require 'bigdecimal' unless defined?(BigDecimal)
+require 'stringio'   unless defined?(StringIO)
 
 if RUBY_VERSION < '1.9.1'
   # @see http://rubygems.org/gems/backports
