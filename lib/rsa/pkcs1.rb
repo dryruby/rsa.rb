@@ -23,13 +23,19 @@ module RSA
     # @return [String] octet string of length `len`
     # @see    http://tools.ietf.org/html/rfc3447#section-4.1
     # @raise  [ArgumentError] if `n` is greater than 256^len
-    def self.i2osp(x, len = Math.log256(x).ceil)
-      raise ArgumentError, "integer too large" if x >= 256**len
+    def self.i2osp(x, len = nil)
+      raise ArgumentError, "integer too large" if len && x >= 256**len
 
-      len.downto(1).inject(String.new) do |s, i|
-        b = (x & 0xFF).chr
-        x >>= 8
-        s = b + s
+      StringIO.open do |buffer|
+        while x > 0
+          b = (x & 0xFF).chr
+          x >>= 8
+          buffer << b
+        end
+        s = buffer.string
+        s.force_encoding(Encoding::BINARY) if s.respond_to?(:force_encoding)
+        s.reverse!
+        s = len ? s.rjust(len, "\0") : s
       end
     end
 
