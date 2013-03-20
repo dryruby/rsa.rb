@@ -99,7 +99,8 @@ module RSA
     # @see    http://en.wikipedia.org/wiki/Coprime
     # @see    http://mathworld.wolfram.com/RelativelyPrime.html
     def self.coprime?(a, b)
-      gcd(a, b).equal?(1)
+      egcd = self.egcd(a, b)
+      (a*egcd[0] + b*egcd[1]).eql?(1)
     end
 
     ##
